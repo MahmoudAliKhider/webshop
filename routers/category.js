@@ -14,6 +14,9 @@ const {
   removeCategory,
   updateCategory,
 } = require("../services/category");
+const subcategoriesRoute = require("./subCategory");
+
+router.use("/:categoryId/subcategories", subcategoriesRoute);
 
 router
   .route("/")
