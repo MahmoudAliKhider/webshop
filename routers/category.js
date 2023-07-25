@@ -1,8 +1,8 @@
 const router = require("express").Router();
 
-const { getCategories, createCategories } = require("../services/category");
+const { getCategories, createCategories, getCategory } = require("../services/category");
 
-router.get("/", getCategories);
-router.post("/", createCategories);
+router.route('/').get(getCategories).post(createCategories);
+router.route('/:id').get(getCategory);
 
 module.exports = router;
