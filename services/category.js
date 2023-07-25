@@ -2,6 +2,7 @@ const slugify = require("slugify");
 const asyncHandler = require("express-async-handler");
 
 const Category = require("../models/category");
+const ApiError = require("../utils/apiError");
 
 exports.getCategories = asyncHandler(async (req, res) => {
   const page = req.query.page * 1 || 1;
@@ -11,11 +12,11 @@ exports.getCategories = asyncHandler(async (req, res) => {
   res.status(200).json({ results: categories.length, page, data: categories });
 });
 
-exports.getCategory = asyncHandler(async (req, res) => {
+exports.getCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const category = await Category.findById(id);
   if (!category) {
-    res.status(404).json({ msg: `No category for this id ${id}` });
+    return next(new ApiError(`No category for this id ${id}`, 404));
   }
   res.status(200).json({ data: category });
 });
@@ -26,7 +27,7 @@ exports.createCategories = asyncHandler(async (req, res) => {
   res.status(201).json({ data: category });
 });
 
-exports.updateCategory = asyncHandler(async (req, res) => {
+exports.updateCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const { name } = req.body;
 
@@ -36,16 +37,16 @@ exports.updateCategory = asyncHandler(async (req, res) => {
     { new: true }
   );
   if (!category) {
-    res.status(404).json({ msg: `No category for this id ${id}` });
+    return next(new ApiError(`No category for this id ${id}`, 404));
   }
   res.status(201).json({ data: category });
 });
 
-exports.removeCategory = asyncHandler(async (req, res) => {
+exports.removeCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const category = await Category.findByIdAndDelete(id);
   if (!category) {
-    res.status(404).json({ msg: `No category for this id ${id}` });
+    return next(new ApiError(`No category for this id ${id}`, 404));
   }
   res.status(200).send("category Delete Success");
 });
