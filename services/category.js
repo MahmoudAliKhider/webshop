@@ -25,3 +25,27 @@ exports.createCategories = asyncHandler(async (req, res) => {
   const category = await Category.create({ name, slug: slugify(name) });
   res.status(201).json({ data: category });
 });
+
+exports.updateCategory = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+
+  const category = await Category.findByIdAndUpdate(
+    { _id: id },
+    { name, slug: slugify(name) },
+    { new: true }
+  );
+  if (!category) {
+    res.status(404).json({ msg: `No category for this id ${id}` });
+  }
+  res.status(201).json({ data: category });
+});
+
+exports.removeCategory = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const category = await Category.findByIdAndDelete(id);
+  if (!category) {
+    res.status(404).json({ msg: `No category for this id ${id}` });
+  }
+  res.status(200).send("category Delete Success");
+});
