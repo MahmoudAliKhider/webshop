@@ -33,6 +33,17 @@ const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 
 exports.uploadCategoryImage = upload.single("image");
 
+const processAndSaveImage = async (buffer) => {
+  const filename = `category-${uuidv4()}-${Date.now()}.jpeg`;
+  await sharp(buffer)
+    .resize(600, 600)
+    .toFormat("jpeg")
+    .jpeg({ quality: 90 })
+    .toFile(`uploads/categories/${filename}`);
+
+  return filename;
+};
+
 exports.getCategories = asyncHandler(async (req, res) => {
   const documentCount = await Category.countDocuments();
   const apiFeature = new ApiFeatures(Category.find(), req.query)
@@ -59,13 +70,7 @@ exports.getCategory = asyncHandler(async (req, res, next) => {
 });
 
 exports.createCategories = asyncHandler(async (req, res) => {
-  const filename = `category-${uuidv4()}-${Date.now()}.jpeg`;
-  await sharp(req.file.buffer)
-    .resize(600, 600)
-    .toFormat("jpeg")
-    .jpeg({ quality: 90 })
-    .toFile(`uploads/categories/${filename}`);
-
+  const filename = await processAndSaveImage(req.file.buffer);
   const name = req.body.name;
 
   const category = await Category.create({
@@ -79,10 +84,11 @@ exports.createCategories = asyncHandler(async (req, res) => {
 exports.updateCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const { name } = req.body;
+  const filename = await processAndSaveImage(req.file.buffer);
 
   const category = await Category.findByIdAndUpdate(
     { _id: id },
-    { name, slug: slugify(name) },
+    { name, slug: slugify(name), image: filename },
     { new: true }
   );
   if (!category) {

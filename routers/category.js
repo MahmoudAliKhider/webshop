@@ -27,6 +27,6 @@ router
   .route("/:id")
   .get(getCategoryValidator, getCategory)
   .delete(deleteCategoryValidator, removeCategory)
-  .put(updateCategoryValidator, updateCategory);
+  .put(uploadCategoryImage,updateCategoryValidator, updateCategory);
 
 module.exports = router;
