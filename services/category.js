@@ -1,22 +1,26 @@
 const slugify = require("slugify");
 const asyncHandler = require("express-async-handler");
 const multer = require("multer");
+const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
 
 const Category = require("../models/category");
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
 
-const multerStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/categories");
-  },
-  filename: function (req, file, cb) {
-    const exc = file.mimetype.split("/")[1];
-    const filename = `category-${uuidv4()}-${Date.now()}.${exc}`;
-    cb(null, filename);
-  },
-});
+//not need makw a resizeImage
+// const multerStorage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "uploads/categories");
+//   },
+//   filename: function (req, file, cb) {
+//     const exc = file.mimetype.split("/")[1];
+//     const filename = `category-${uuidv4()}-${Date.now()}.${exc}`;
+//     cb(null, filename);
+//   },
+// });
+
+const multerStorage = multer.memoryStorage();
 
 const multerFilter = function (req, file, cb) {
   if (file.mimetype.startsWith("image")) {
@@ -28,6 +32,17 @@ const multerFilter = function (req, file, cb) {
 const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 
 exports.uploadCategoryImage = upload.single("image");
+
+exports.resizeImage = asyncHandler(async (req, res, next) => {
+  const filename = `category-${uuidv4()}-${Date.now()}.jpeg`;
+  await sharp(req.file.buffer)
+    .resize(600, 600)
+    .toFormat("jpeg")
+    .jpeg({ quality: 90 })
+    .toFile(`uploads/categories/${filename}`);
+
+  next();
+});
 
 exports.getCategories = asyncHandler(async (req, res) => {
   const documentCount = await Category.countDocuments();
