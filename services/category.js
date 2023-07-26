@@ -1,9 +1,33 @@
 const slugify = require("slugify");
 const asyncHandler = require("express-async-handler");
+const multer = require("multer");
+const { v4: uuidv4 } = require("uuid");
 
 const Category = require("../models/category");
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
+
+const multerStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/categories");
+  },
+  filename: function (req, file, cb) {
+    const exc = file.mimetype.split("/")[1];
+    const filename = `category-${uuidv4()}-${Date.now()}.${exc}`;
+    cb(null, filename);
+  },
+});
+
+const multerFilter = function (req, file, cb) {
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+  } else {
+    cb(new ApiError("Only Image Allowed", 400), false);
+  }
+};
+const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+
+exports.uploadCategoryImage = upload.single("image");
 
 exports.getCategories = asyncHandler(async (req, res) => {
   const documentCount = await Category.countDocuments();
@@ -16,7 +40,9 @@ exports.getCategories = asyncHandler(async (req, res) => {
   const { mongooseQuery, paginationResult } = apiFeature;
   const categories = await mongooseQuery;
 
-  res.status(200).json({ paginationResult ,results: categories.length, data: categories });
+  res
+    .status(200)
+    .json({ paginationResult, results: categories.length, data: categories });
 });
 
 exports.getCategory = asyncHandler(async (req, res, next) => {
