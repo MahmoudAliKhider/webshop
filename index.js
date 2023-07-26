@@ -20,6 +20,7 @@ if (process.env.NODE_ENV === "development") {
   console.log(`mode: ${process.env.NODE_ENV}`);
 }
 
+app.use("/api/v1/products", require("./routers/product"));
 app.use("/api/v1/categories", require("./routers/category"));
 app.use("/api/v1/subcategories", require("./routers/subCategory"));
 app.use("/api/v1/brands", require("./routers/brand"));
