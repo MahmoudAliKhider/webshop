@@ -1,10 +1,10 @@
-const express = require('express');
+const express = require("express");
 const {
   getBrandValidator,
   createBrandValidator,
   updateBrandValidator,
   deleteBrandValidator,
-} = require('../utils/validator/brandValidator');
+} = require("../utils/validator/brandValidator");
 
 const {
   getBrands,
@@ -12,15 +12,19 @@ const {
   createBrand,
   updateBrand,
   deleteBrand,
-} = require('../services/brand');
+  uploadCategoryImage,
+} = require("../services/brand");
 
 const router = express.Router();
 
-router.route('/').get(getBrands).post(createBrandValidator, createBrand);
 router
-  .route('/:id')
+  .route("/")
+  .get(getBrands)
+  .post(uploadCategoryImage, createBrandValidator, createBrand);
+router
+  .route("/:id")
   .get(getBrandValidator, getBrand)
-  .put(updateBrandValidator, updateBrand)
+  .put(uploadCategoryImage, updateBrandValidator, updateBrand)
   .delete(deleteBrandValidator, deleteBrand);
 
 module.exports = router;

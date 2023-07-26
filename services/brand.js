@@ -1,9 +1,37 @@
-const slugify = require('slugify');
-const asyncHandler = require('express-async-handler');
-const ApiError = require('../utils/apiError');
+const slugify = require("slugify");
+const asyncHandler = require("express-async-handler");
+const multer = require("multer");
+const sharp = require("sharp");
+const { v4: uuidv4 } = require("uuid");
+
+const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
 
-const Brand = require('../models/brand');
+const Brand = require("../models/brand");
+
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = function (req, file, cb) {
+  if (file.mimetype.startsWith("image")) {
+    cb(null, true);
+  } else {
+    cb(new ApiError("Only Image Allowed", 400), false);
+  }
+};
+const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+
+exports.uploadCategoryImage = upload.single("image");
+
+const processAndSaveImage = async (buffer) => {
+  const filename = `brand-${uuidv4()}-${Date.now()}.jpeg`;
+  await sharp(buffer)
+    .resize(600, 600)
+    .toFormat("jpeg")
+    .jpeg({ quality: 90 })
+    .toFile(`uploads/brands/${filename}`);
+
+  return filename;
+};
 
 // GET /api/v1/brands
 exports.getBrands = asyncHandler(async (req, res) => {
@@ -17,7 +45,9 @@ exports.getBrands = asyncHandler(async (req, res) => {
   const { mongooseQuery, paginationResult } = apiFeature;
   const brands = await mongooseQuery;
 
-  res.status(200).json({ paginationResult ,results: brands.length, data: brands });
+  res
+    .status(200)
+    .json({ paginationResult, results: brands.length, data: brands });
 });
 
 // GET /api/v1/brands/:id
@@ -33,7 +63,13 @@ exports.getBrand = asyncHandler(async (req, res, next) => {
 // POST  /api/v1/brands
 exports.createBrand = asyncHandler(async (req, res) => {
   const { name } = req.body;
-  const brand = await Brand.create({ name, slug: slugify(name) });
+  const filename = await processAndSaveImage(req.file.buffer);
+
+  const brand = await Brand.create({
+    name,
+    slug: slugify(name),
+    image: filename,
+  });
   res.status(201).json({ data: brand });
 });
 
@@ -41,10 +77,11 @@ exports.createBrand = asyncHandler(async (req, res) => {
 exports.updateBrand = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const { name } = req.body;
+  const filename = await processAndSaveImage(req.file.buffer);
 
   const brand = await Brand.findOneAndUpdate(
     { _id: id },
-    { name, slug: slugify(name) },
+    { name, slug: slugify(name), image: filename },
     { new: true }
   );
 
