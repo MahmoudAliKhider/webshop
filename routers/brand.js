@@ -1,4 +1,5 @@
-const express = require("express");
+const router = require("express").Router();
+
 const {
   getBrandValidator,
   createBrandValidator,
@@ -15,7 +16,6 @@ const {
   uploadCategoryImage,
 } = require("../services/brand");
 
-const router = express.Router();
 
 router
   .route("/")

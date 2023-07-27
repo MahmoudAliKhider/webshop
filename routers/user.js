@@ -1,4 +1,4 @@
-const express = require("express");
+const router = require("express").Router();
 const {
   getUserValidator,
   createUserValidator,
@@ -18,7 +18,6 @@ const {
   changeUserPassword,
 } = require("../services/user");
 
-const router = express.Router();
 
 router
   .route("/")
