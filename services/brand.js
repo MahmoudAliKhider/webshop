@@ -63,8 +63,10 @@ exports.getBrand = asyncHandler(async (req, res, next) => {
 // POST  /api/v1/brands
 exports.createBrand = asyncHandler(async (req, res) => {
   const { name } = req.body;
+  if (!req.file) {
+    throw new ApiError("No image file found", 400);
+  }
   const filename = await processAndSaveImage(req.file.buffer);
-
   const brand = await Brand.create({
     name,
     slug: slugify(name),
