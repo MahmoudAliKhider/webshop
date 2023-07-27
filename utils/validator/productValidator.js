@@ -84,7 +84,6 @@ exports.createProductValidator = [
         }
       )
     )
-    //check SubCategory belong to category??
     .custom((val, { req }) =>
       SubCategory.find({ category: req.body.category }).then(
         (subcategories) => {
