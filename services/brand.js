@@ -33,7 +33,6 @@ const processAndSaveImage = async (buffer) => {
   return filename;
 };
 
-// GET /api/v1/brands
 exports.getBrands = asyncHandler(async (req, res) => {
   const documentCount = await Brand.countDocuments();
   const apiFeature = new ApiFeatures(Brand.find(), req.query)
@@ -50,7 +49,6 @@ exports.getBrands = asyncHandler(async (req, res) => {
     .json({ paginationResult, results: brands.length, data: brands });
 });
 
-// GET /api/v1/brands/:id
 exports.getBrand = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const brand = await Brand.findById(id);
@@ -60,7 +58,6 @@ exports.getBrand = asyncHandler(async (req, res, next) => {
   res.status(200).json({ data: brand });
 });
 
-// POST  /api/v1/brands
 exports.createBrand = asyncHandler(async (req, res) => {
   const { name } = req.body;
   if (!req.file) {
@@ -75,7 +72,6 @@ exports.createBrand = asyncHandler(async (req, res) => {
   res.status(201).json({ data: brand });
 });
 
-// PUT /api/v1/brands/:id
 exports.updateBrand = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const { name } = req.body;
@@ -93,7 +89,6 @@ exports.updateBrand = asyncHandler(async (req, res, next) => {
   res.status(200).json({ data: brand });
 });
 
-// DELETE /api/v1/brands/:id
 exports.deleteBrand = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const brand = await Brand.findByIdAndDelete(id);
