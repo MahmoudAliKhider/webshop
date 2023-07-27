@@ -16,6 +16,7 @@ const {
   removeCategory,
   updateCategory,
   uploadCategoryImage,
+  resizeProductImage,
 } = require("../services/category");
 const subcategoriesRoute = require("./subCategory");
 
@@ -26,14 +27,28 @@ router
   .get(getCategories)
   .post(
     authServices.protect,
+    authServices.allowedTo("admin", "manager"),
     uploadCategoryImage,
+    resizeProductImage,
     createCategoryValidator,
     createCategories
   );
 router
   .route("/:id")
   .get(getCategoryValidator, getCategory)
-  .delete(deleteCategoryValidator, removeCategory)
-  .put(uploadCategoryImage, updateCategoryValidator, updateCategory);
+  .delete(
+    authServices.protect,
+    authServices.allowedTo("admin", "manager"),
+    deleteCategoryValidator,
+    removeCategory
+  )
+  .put(
+    authServices.protect,
+    authServices.allowedTo("admin", "manager"),
+    uploadCategoryImage,
+    resizeProductImage,
+    updateCategoryValidator,
+    updateCategory
+  );
 
 module.exports = router;

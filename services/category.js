@@ -33,16 +33,21 @@ const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
 
 exports.uploadCategoryImage = upload.single("image");
 
-const processAndSaveImage = async (buffer) => {
+exports.resizeProductImage = asyncHandler(async (req, res, next) => {
   const filename = `category-${uuidv4()}-${Date.now()}.jpeg`;
-  await sharp(buffer)
-    .resize(600, 600)
-    .toFormat("jpeg")
-    .jpeg({ quality: 90 })
-    .toFile(`uploads/categories/${filename}`);
 
-  return filename;
-};
+  if (req.file) {
+    await sharp(req.file.buffer)
+      .resize(600, 600)
+      .toFormat("jpeg")
+      .jpeg({ quality: 95 })
+      .toFile(`uploads/categories/${filename}`);
+
+    // Save image into our db
+    req.body.image = filename;
+  }
+  next();
+});
 
 exports.getCategories = asyncHandler(async (req, res) => {
   const documentCount = await Category.countDocuments();
@@ -70,14 +75,7 @@ exports.getCategory = asyncHandler(async (req, res, next) => {
 });
 
 exports.createCategories = asyncHandler(async (req, res) => {
-  const filename = await processAndSaveImage(req.file.buffer);
-  const name = req.body.name;
-
-  const category = await Category.create({
-    name,
-    slug: slugify(name),
-    image: filename,
-  });
+  const category = await Category.create(req.body);
   res.status(201).json({ data: category });
 });
 

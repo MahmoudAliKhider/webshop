@@ -16,15 +16,33 @@ const {
   uploadCategoryImage,
 } = require("../services/brand");
 
+const authServices = require("../services/auth");
 
 router
   .route("/")
   .get(getBrands)
-  .post(uploadCategoryImage, createBrandValidator, createBrand);
+  .post(
+    authServices.protect,
+    authServices.allowedTo("admin", "manager"),
+    uploadCategoryImage,
+    createBrandValidator,
+    createBrand
+  );
 router
   .route("/:id")
   .get(getBrandValidator, getBrand)
-  .put(uploadCategoryImage, updateBrandValidator, updateBrand)
-  .delete(deleteBrandValidator, deleteBrand);
+  .put(
+    authServices.protect,
+    authServices.allowedTo("admin", "manager"),
+    uploadCategoryImage,
+    updateBrandValidator,
+    updateBrand
+  )
+  .delete(
+    authServices.protect,
+    authServices.allowedTo("admin"),
+    deleteBrandValidator,
+    deleteBrand
+  );
 
 module.exports = router;

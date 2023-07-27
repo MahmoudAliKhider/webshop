@@ -1,10 +1,12 @@
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 const User = require("../models/user");
 const ApiError = require("../utils/apiError");
 const createToken = require("../utils/createToken");
+const { sendOTP } = require("../utils/sendEmail");
 
 exports.signup = asyncHandler(async (req, res, next) => {
   const user = await User.create({
@@ -79,4 +81,105 @@ exports.protect = asyncHandler(async (req, res, next) => {
 
   req.user = currentUser;
   next();
+});
+
+exports.allowedTo = (...roles) =>
+  asyncHandler(async (req, res, next) => {
+    //access registered user (req.user.role)
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new ApiError("You are not allowed to access this route", 403)
+      );
+    }
+    next();
+  });
+
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(
+      new ApiError(`There is no user with that email ${req.body.email}`, 404)
+    );
+  }
+
+  const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+  const hashedResetCode = crypto
+    .createHash("sha256")
+    .update(resetCode)
+    .digest("hex");
+
+  user.passwordResetCode = hashedResetCode;
+  user.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+  user.passwordResetVerified = false;
+
+  await user.save();
+
+  // Send the reset code via email
+  const message = `Hi ${user.name},\n We received a request to reset the password on your Alumni Account. \n ${resetCode} \n Enter this code to complete the reset. \n Thanks for helping us keep your account secure.\n 😍💗`;
+  try {
+    await sendOTP({
+      email: user.email,
+      subject: "Your password reset code (valid for 10 min)",
+      message,
+    });
+  } catch (err) {
+    user.passwordResetCode = undefined;
+    user.passwordResetExpires = undefined;
+    user.passwordResetVerified = undefined;
+
+    await user.save();
+    return next(new ApiError("There is an error in sending email", 500));
+  }
+
+  res
+    .status(200)
+    .json({ status: "Success", message: "Reset code sent to email" });
+});
+
+exports.verifyPassResetCode = asyncHandler(async (req, res, next) => {
+  const hashedResetCode = crypto
+    .createHash("sha256")
+    .update(req.body.resetCode)
+    .digest("hex");
+
+  const user = await User.findOne({
+    passwordResetCode: hashedResetCode,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+  if (!user) {
+    return next(new ApiError('Reset code invalid or expired'));
+  }
+  // Reset code valid
+  user.passwordResetVerified = true;
+  await user.save();
+
+  res.status(200).json({
+    status: "Success",
+  });
+});
+
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(
+      new ApiError(`There is no user with email ${req.body.email}`, 404)
+    );
+  }
+
+  if (!user.passwordResetVerified) {
+    return next(new ApiError('Reset code not verified', 400));
+  }
+
+  const newpassword = await bcrypt.hash(req.body.password, 12);
+  user.password = newpassword;
+  user.passwordResetCode = undefined;
+  user.passwordResetExpires = undefined;
+  user.passwordResetVerified = undefined;
+
+  await user.save();
+  //   console.log(user);
+
+  // if everything is ok, generate token
+  const token = createToken(user._id);
+  res.status(200).json({ token });
 });

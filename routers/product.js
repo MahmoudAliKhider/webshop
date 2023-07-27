@@ -13,17 +13,38 @@ const {
   updateProduct,
   deleteProduct,
   uploadCategoryImage,
-  resizeProductImage
+  resizeProductImage,
 } = require("../services/product");
+
+const authServices = require("../services/auth");
 
 router
   .route("/")
   .get(getProducts)
-  .post(uploadCategoryImage, resizeProductImage,createProductValidator, createProduct);
+  .post(
+    authServices.protect,
+    authServices.allowedTo("admin", "manager"),
+    uploadCategoryImage,
+    resizeProductImage,
+    createProductValidator,
+    createProduct
+  );
 router
   .route("/:id")
   .get(getProductValidator, getProduct)
-  .put(uploadCategoryImage, resizeProductImage,updateProductValidator, updateProduct)
-  .delete(deleteProductValidator, deleteProduct);
+  .put(
+    authServices.protect,
+    authServices.allowedTo("admin", "manager"),
+    uploadCategoryImage,
+    resizeProductImage,
+    updateProductValidator,
+    updateProduct
+  )
+  .delete(
+    authServices.protect,
+    authServices.allowedTo("admin"),
+    deleteProductValidator,
+    deleteProduct
+  );
 
 module.exports = router;
