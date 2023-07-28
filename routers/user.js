@@ -16,9 +16,18 @@ const {
   deleteUser,
   uploadUserImage,
   changeUserPassword,
+  getLoggedUserData,
+  updateLoggedUserPassword
 } = require("../services/user");
 
 const authServices = require("../services/auth");
+
+router.use(authServices.protect);
+
+router.get('/getMe', getLoggedUserData, getUser);
+router.put('/changeMyPassword', updateLoggedUserPassword);
+// router.put('/updateMe', updateLoggedUserValidator, updateLoggedUserData);
+// router.delete('/deleteMe', deleteLoggedUserData);
 
 router
   .route("/")
@@ -37,6 +46,8 @@ router
 
 router.put(
   "/changePassword/:id",
+  authServices.protect,
+  authServices.allowedTo("admin"),
   changeUserPasswordValidator,
   changeUserPassword
 );

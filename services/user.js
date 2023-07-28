@@ -3,10 +3,11 @@ const asyncHandler = require("express-async-handler");
 const multer = require("multer");
 const sharp = require("sharp");
 const { v4: uuidv4 } = require("uuid");
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
+const createToken = require("../utils/createToken");
 
 const User = require("../models/user");
 
@@ -129,4 +130,26 @@ exports.deleteUser = asyncHandler(async (req, res, next) => {
     return next(new ApiError(`No brand for this id ${id}`, 404));
   }
   res.status(204).send("remove Success");
+});
+
+exports.getLoggedUserData = asyncHandler(async (req, res, next) => {
+  req.params.id = req.user._id;
+  next();
+});
+
+exports.updateLoggedUserPassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      password: await bcrypt.hash(req.body.password, 12),
+      passwordChangedAt: Date.now(),
+    },
+    {
+      new: true,
+    }
+  );
+
+  const token = createToken(user._id);
+
+  res.status(200).json({ data: user, token });
 });

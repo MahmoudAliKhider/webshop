@@ -147,7 +147,7 @@ exports.verifyPassResetCode = asyncHandler(async (req, res, next) => {
     passwordResetExpires: { $gt: Date.now() },
   });
   if (!user) {
-    return next(new ApiError('Reset code invalid or expired'));
+    return next(new ApiError("Reset code invalid or expired"));
   }
   // Reset code valid
   user.passwordResetVerified = true;
@@ -167,7 +167,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   }
 
   if (!user.passwordResetVerified) {
-    return next(new ApiError('Reset code not verified', 400));
+    return next(new ApiError("Reset code not verified", 400));
   }
 
   const newpassword = await bcrypt.hash(req.body.password, 12);
