@@ -17,17 +17,19 @@ const {
   uploadUserImage,
   changeUserPassword,
   getLoggedUserData,
-  updateLoggedUserPassword
+  updateLoggedUserPassword,
+  updateLoggedUserData,
+  deleteLoggedUserData,
 } = require("../services/user");
 
 const authServices = require("../services/auth");
 
 router.use(authServices.protect);
 
-router.get('/getMe', getLoggedUserData, getUser);
-router.put('/changeMyPassword', updateLoggedUserPassword);
-// router.put('/updateMe', updateLoggedUserValidator, updateLoggedUserData);
-// router.delete('/deleteMe', deleteLoggedUserData);
+router.get("/getMe", getLoggedUserData, getUser);
+router.put("/changeMyPassword", updateLoggedUserPassword);
+router.put("/updateMe", updateLoggedUserValidator, updateLoggedUserData);
+router.delete("/deleteMe", deleteLoggedUserData);
 
 router
   .route("/")

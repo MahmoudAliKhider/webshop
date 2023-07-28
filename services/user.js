@@ -153,3 +153,25 @@ exports.updateLoggedUserPassword = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ data: user, token });
 });
+
+//Update logged user data without password, role
+exports.updateLoggedUserData = asyncHandler(async (req, res, next) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+    },
+    { new: true }
+  );
+
+  res.status(200).json({ data: updatedUser });
+});
+
+//active: false,
+exports.deleteLoggedUserData = asyncHandler(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user._id, { active: false });
+
+  res.status(204).json({ status: "Success" });
+});
