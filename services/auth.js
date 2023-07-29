@@ -9,10 +9,12 @@ const createToken = require("../utils/createToken");
 const { sendOTP } = require("../utils/sendEmail");
 
 exports.signup = asyncHandler(async (req, res, next) => {
+
+  const password =  await bcrypt.hash(req.body.password, 12);
   const user = await User.create({
     name: req.body.name,
     email: req.body.email,
-    password: req.body.password,
+    password: password,
   });
 
   const token = createToken(user._id);

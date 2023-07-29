@@ -45,23 +45,23 @@ const userSchema = new mongoose.Schema(
         ref: "Product",
       },
     ],
-    addresses: [
-      {
-        id: { type: mongoose.Schema.Types.ObjectId },
-        alias: String,
-        details: String,
-        phone: String,
-        city: String,
-        postalCode: String,
-      },
-    ],
+    // addresses: [
+    //   {
+    //     id: { type: mongoose.Schema.Types.ObjectId },
+    //     alias: String,
+    //     details: String,
+    //     phone: String,
+    //     city: String,
+    //     postalCode: String,
+    //   },
+    // ],
   },
   { timestamps: true }
 );
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  // Hashing user password
+
   this.password = bcrypt.hash(this.password, 12);
   next();
 });
