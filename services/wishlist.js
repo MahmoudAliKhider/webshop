@@ -1,7 +1,6 @@
-const asyncHandler = require('express-async-handler');
+const asyncHandler = require("express-async-handler");
 
-const User = require('../models/user');
-
+const User = require("../models/user");
 
 exports.addProductToWishlist = asyncHandler(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(
@@ -13,12 +12,11 @@ exports.addProductToWishlist = asyncHandler(async (req, res, next) => {
   );
 
   res.status(200).json({
-    status: 'success',
-    message: 'Product added successfully to your wishlist.',
+    status: "success",
+    message: "Product added successfully to your wishlist.",
     data: user.wishlist,
   });
 });
-
 
 exports.removeProductFromWishlist = asyncHandler(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(
@@ -30,18 +28,17 @@ exports.removeProductFromWishlist = asyncHandler(async (req, res, next) => {
   );
 
   res.status(200).json({
-    status: 'success',
-    message: 'Product removed successfully from your wishlist.',
+    status: "success",
+    message: "Product removed successfully from your wishlist.",
     data: user.wishlist,
   });
 });
 
-
 exports.getLoggedUserWishlist = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user._id).populate('wishlist');
+  const user = await User.findById(req.user._id).populate("wishlist");
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     results: user.wishlist.length,
     data: user.wishlist,
   });
