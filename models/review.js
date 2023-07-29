@@ -43,7 +43,6 @@ reviewSchema.statics.calcAverageRatingsAndQuantity = async function (
     },
   ]);
 
-  // console.log(result);
   if (result.length > 0) {
     await Product.findByIdAndUpdate(productId, {
       ratingsAverage: result[0].avgRatings,
@@ -61,8 +60,8 @@ reviewSchema.post("save", async function () {
   await this.constructor.calcAverageRatingsAndQuantity(this.product);
 });
 
-reviewSchema.post("remove", async function () {
-  await this.constructor.calcAverageRatingsAndQuantity(this.product);
+reviewSchema.post("remove", async function (doc) {
+  await this.constructor.calcAverageRatingsAndQuantity(doc.product);
 });
 
 reviewSchema.pre(/^find/, function (next) {

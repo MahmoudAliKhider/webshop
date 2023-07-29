@@ -66,6 +66,8 @@ exports.updateReview = asyncHandler(async (req, res, next) => {
   if (!review) {
     return next(new ApiError(`No review for this id ${id}`, 404));
   }
+  review.save();
+
   res.status(200).json({ data: review });
 });
 
@@ -74,7 +76,11 @@ exports.deleteReview = asyncHandler(async (req, res, next) => {
   const review = await Review.findByIdAndDelete(id);
 
   if (!review) {
-    return next(new ApiError(`No brand for this id ${id}`, 404));
+    return next(new ApiError(`No review for this id ${id}`, 404));
   }
-  res.status(204).send("remove Success");
+  const productId = review.product;
+
+  Review.calcAverageRatingsAndQuantity(productId);
+
+  res.status(204).send("Remove Success");
 });
