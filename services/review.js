@@ -1,13 +1,17 @@
 const slugify = require("slugify");
 const asyncHandler = require("express-async-handler");
-// const multer = require("multer");
-// const sharp = require("sharp");
-// const { v4: uuidv4 } = require("uuid");
 
 const ApiError = require("../utils/apiError");
 const ApiFeatures = require("../utils/apiFeatures");
 
 const Review = require("../models/review");
+
+exports.createFilterObj = (req, res, next) => {
+  let filterObject = {};
+  if (req.params.productId) filterObject = { product: req.params.productId };
+  req.filterObj = filterObject;
+  next();
+};
 
 exports.getReviews = asyncHandler(async (req, res) => {
   const documentCount = await Review.countDocuments();
@@ -33,6 +37,11 @@ exports.getReview = asyncHandler(async (req, res, next) => {
   }
   res.status(200).json({ data: review });
 });
+
+exports.setProductIdAndUserIdToBody = (req, res, next) => {
+  if (!req.body.product) req.body.product = req.params.productId;
+  next();
+};
 
 exports.createReview = asyncHandler(async (req, res) => {
   const review = await Review.create({

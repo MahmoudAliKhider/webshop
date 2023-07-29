@@ -17,7 +17,9 @@ const {
 } = require("../services/product");
 
 const authServices = require("../services/auth");
+const reviewsRoute = require('./review');
 
+router.use('/:productId/reviews', reviewsRoute);
 router
   .route("/")
   .get(getProducts)

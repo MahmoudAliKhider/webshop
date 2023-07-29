@@ -13,21 +13,24 @@ const {
   createReview,
   updateReview,
   deleteReview,
-  //   createFilterObj,
-  //   setProductIdAndUserIdToBody,
+  createFilterObj,
+  setProductIdAndUserIdToBody,
 } = require("../services/review");
 
 const authService = require("../services/auth");
 
 const router = express.Router({ mergeParams: true });
 
-router.route("/").get(getReviews).post(
-  authService.protect,
-  authService.allowedTo("user"),
-  // setProductIdAndUserIdToBody,
-  createReviewValidator,
-  createReview
-);
+router
+  .route("/")
+  .get(createFilterObj, getReviews)
+  .post(
+    authService.protect,
+    authService.allowedTo("user"),
+    setProductIdAndUserIdToBody,
+    createReviewValidator,
+    createReview
+  );
 router
   .route("/:id")
   .get(getReviewValidator, getReview)
