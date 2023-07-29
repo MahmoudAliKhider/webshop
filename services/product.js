@@ -85,10 +85,19 @@ exports.getProducts = asyncHandler(async (req, res) => {
 
 exports.getProduct = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
-  const product = await Product.findById(id).populate({
-    path: "category",
-    select: "name",
-  });
+  const product = await Product.findById(id)
+    .populate({
+      path: "category",
+      select: "name",
+    })
+    .populate({
+      path: "reviews",
+      select: "ratings",
+      populate: {
+        path: "user",
+        select: "name",
+      },
+    });
 
   if (!product) {
     return next(new ApiError(`No Product for this id ${id}`, 404));
