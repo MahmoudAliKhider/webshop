@@ -32,6 +32,7 @@ app.use("/api/v1/auth", require("./routers/auth"));
 app.use("/api/v1/reviews", require("./routers/review"));
 app.use("/api/v1/wishlist", require("./routers/wishlist"));
 app.use("/api/v1/addresses", require("./routers/address"));
+app.use("/api/v1/coupons", require("./routers/coupon"));
 
 app.all("*", (req, res, next) => {
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
