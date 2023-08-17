@@ -3,6 +3,9 @@ const path = require("path");
 
 const dotenv = require("dotenv");
 const morgan = require("morgan");
+const cors = require('cors');
+const compression = require('compression');
+
 dotenv.config({ path: "config.env" });
 
 const dbConnection = require("./config/db");
@@ -14,6 +17,10 @@ require("dotenv").config();
 dbConnection();
 
 const app = express();
+
+app.use(cors());
+app.options('*', cors());
+
 // Middlewares
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "uploads")));
