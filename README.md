@@ -1,5 +1,4 @@
 # webshop
-####################################
 This course covers the development of an online store application using Express Server and MongoDB, focusing on various aspects:
 
 1. **Preparation and Server Setup:**
