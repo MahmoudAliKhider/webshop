@@ -8,6 +8,9 @@ const compression = require('compression');
 
 dotenv.config({ path: "config.env" });
 
+const swaggerUI = require("swagger-ui-express");
+const swaggerDocument = require("./config/swagger.json");
+
 const dbConnection = require("./config/db");
 const ApiError = require("./utils/apiError");
 const globalError = require("./middelwares/errorMiddelware");
@@ -29,6 +32,8 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
   console.log(`mode: ${process.env.NODE_ENV}`);
 }
+
+app.use("/swagger", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use("/api/v1/products", require("./routers/product"));
 app.use("/api/v1/categories", require("./routers/category"));

@@ -82,17 +82,27 @@ exports.createUser = asyncHandler(async (req, res) => {
 });
 
 exports.updateUser = asyncHandler(async (req, res, next) => {
-  const filename = await processAndSaveImage(req.file.buffer);
+  let filename;
+
+  if (req.file && req.file.buffer) {
+    filename = await processAndSaveImage(req.file.buffer);
+  }
+
+  const updateData = {
+    name: req.body.name,
+    slug: req.body.slug,
+    phone: req.body.phone,
+    email: req.body.email,
+    role: req.body.role,
+  };
+
+  if (filename) {
+    updateData.profileImg = filename;
+  }
+
   const document = await User.findByIdAndUpdate(
     req.params.id,
-    {
-      name: req.body.name,
-      slug: req.body.slug,
-      phone: req.body.phone,
-      email: req.body.email,
-      profileImg: filename,
-      role: req.body.role,
-    },
+    updateData,
     {
       new: true,
     }
@@ -127,7 +137,7 @@ exports.deleteUser = asyncHandler(async (req, res, next) => {
   const user = await User.findByIdAndDelete(id);
 
   if (!user) {
-    return next(new ApiError(`No brand for this id ${id}`, 404));
+    return next(new ApiError(`No User for this id ${id}`, 404));
   }
   res.status(204).send("remove Success");
 });

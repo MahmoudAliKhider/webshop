@@ -34,17 +34,18 @@ router
 router
   .route("/:id")
   .get(getReviewValidator, getReview)
-  .put(
-    authService.protect,
-    authService.allowedTo("user"),
-    updateReviewValidator,
-    updateReview
-  )
+
   .delete(
     authService.protect,
     authService.allowedTo("user", "manager", "admin"),
     deleteReviewValidator,
     deleteReview
   );
-
+router.put(
+  "/update/:id",
+  authService.protect,
+  authService.allowedTo("user"),
+  updateReviewValidator,
+  updateReview
+);
 module.exports = router;

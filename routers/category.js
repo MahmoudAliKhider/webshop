@@ -41,14 +41,15 @@ router
     authServices.allowedTo("admin", "manager"),
     deleteCategoryValidator,
     removeCategory
-  )
-  .put(
-    authServices.protect,
-    authServices.allowedTo("admin", "manager"),
-    uploadCategoryImage,
-    resizeProductImage,
-    updateCategoryValidator,
-    updateCategory
   );
+router.put(
+  "/update/:id",
+  authServices.protect,
+  authServices.allowedTo("admin", "manager"),
+  uploadCategoryImage,
+  resizeProductImage,
+  updateCategoryValidator,
+  updateCategory
+);
 
 module.exports = router;

@@ -17,9 +17,9 @@ const {
 } = require("../services/product");
 
 const authServices = require("../services/auth");
-const reviewsRoute = require('./review');
+const reviewsRoute = require("./review");
 
-router.use('/:productId/reviews', reviewsRoute);
+router.use("/:productId/reviews", reviewsRoute);
 router
   .route("/")
   .get(getProducts)
@@ -31,6 +31,15 @@ router
     createProductValidator,
     createProduct
   );
+router.put(
+  "update/:id",
+  authServices.protect,
+  authServices.allowedTo("admin", "manager"),
+  uploadCategoryImage,
+  resizeProductImage,
+  updateProductValidator,
+  updateProduct
+);
 router
   .route("/:id")
   .get(getProductValidator, getProduct)

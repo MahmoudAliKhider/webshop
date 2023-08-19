@@ -46,7 +46,7 @@ router
     createUser
   );
 
-router.put(
+router.put( 
   "/changePassword/:id",
   authServices.protect,
   authServices.allowedTo("admin"),
@@ -54,6 +54,13 @@ router.put(
   changeUserPassword
 );
 
+router.put("/update/:id",
+  authServices.protect,
+  authServices.allowedTo("admin"),
+  uploadUserImage,
+  updateUserValidator,
+  updateUser
+)
 router
   .route("/:id")
   .get(
@@ -61,13 +68,6 @@ router
     authServices.allowedTo("admin"),
     getUserValidator,
     getUser
-  )
-  .put(
-    authServices.protect,
-    authServices.allowedTo("admin"),
-    uploadUserImage,
-    updateUserValidator,
-    updateUser
   )
   .delete(
     authServices.protect,

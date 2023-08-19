@@ -82,11 +82,11 @@ exports.createCategories = asyncHandler(async (req, res) => {
 exports.updateCategory = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const { name } = req.body;
-  const filename = await processAndSaveImage(req.file.buffer);
+  // const filename = await processAndSaveImage(req.file.buffer);
 
   const category = await Category.findByIdAndUpdate(
     { _id: id },
-    { name, slug: slugify(name), image: filename },
+    { name, slug: slugify(name), image: req.body.image },
     { new: true }
   );
   if (!category) {

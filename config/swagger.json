@@ -1,0 +1,1982 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "API"
+  },
+  "schemes": ["https", "http"],
+  "consumes": ["application/json"],
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+
+  "paths": {
+    "/api/v1/auth/signup": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "Register a new user",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User registered successfully",
+            "schema": {
+              "$ref": "#/definitions/UserToken"
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "schema": {
+              "$ref": "#/definitions/ErrorValidationResponse"
+            }
+          }
+        },
+        "examples": {
+          "request": {
+            "summary": "Example request body",
+            "value": {
+              "name": "mahmoud Khider",
+              "email": "mahmoudkhider087@gmail.com",
+              "password": "Pa$$w0rd",
+              "passwordConfirm": "Pa$$w0rd"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "Login ",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User registered successfully",
+            "schema": {}
+          },
+          "400": {
+            "description": "Validation error",
+            "schema": {}
+          }
+        },
+        "examples": {
+          "request": {
+            "summary": "Example request body",
+            "value": {
+              "email": "mahmoudkhider087@gmail.com",
+              "password": "Pa$$w0rd"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/forgotPassword": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "forgetPassword ",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/forgetPassword"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User registered successfully",
+            "schema": {}
+          },
+          "400": {
+            "description": "Validation error",
+            "schema": {}
+          }
+        },
+        "examples": {
+          "request": {
+            "summary": "Example request body",
+            "value": {
+              "email": "mahmoudkhider087@gmail.com"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/verifyResetCode": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "forgetPassword ",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/verifyPassResetCode"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User registered successfully",
+            "schema": {
+              "$ref": "#/definitions/UserToken"
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "schema": {
+              "$ref": "#/definitions/ErrorValidationResponse"
+            }
+          }
+        },
+        "examples": {
+          "request": {
+            "summary": "Example request body",
+            "value": {
+              "resetCode": "123456"
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/resetPassword": {
+      "put": {
+        "tags": ["Account"],
+        "summary": "resetPassword ",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/resetPassword"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User registered successfully"
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        },
+        "examples": {
+          "request": {
+            "summary": "Example request body",
+            "value": {
+              "email": "mahmoudkhider087@gmail.com",
+              "newPassword": "Pa$$w0rd"
+            }
+          }
+        }
+      }
+    },
+
+    "/api/v1/users": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Create a new user",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "passwordConfirm",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "profileImg",
+            "in": "formData",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/api/v1/users/changePassword/{id}": {
+      "put": {
+        "tags": ["User"],
+        "summary": "Change user's password",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "changePassword",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/changePassword"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password changed successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/api/v1/users/": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Create a new user",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/api/v1/users/{id}/": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Create a new user",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/api/v1/users/update/{id}": {
+      "put": {
+        "tags": ["User"],
+        "summary": "Update user information",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "formData",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "slug",
+            "in": "formData",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "phone",
+            "in": "formData",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "role",
+            "in": "formData",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "required": false,
+            "type": "file"
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/api/v1/users/{id}": {
+      "delete": {
+        "tags": ["User"],
+        "summary": "Delete a user",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User deleted successfully"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+
+    "/api/v1/users/getMe": {
+      "get": {
+        "tags": ["LoogedUser"],
+        "summary": "get a user data",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User deleted successfully"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/api/v1/users/changeMyPassword": {
+      "put": {
+        "tags": ["LoogedUser"],
+        "summary": "update a user data",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "changeMyPassword",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/changeMyPassword"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User updated successfully"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/api/v1/users/updateMe": {
+      "put": {
+        "tags": ["LoogedUser"],
+        "summary": "update a user data",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "changeMyPassword",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/updateLoggedUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User updated successfully"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/api/v1/users/deleteMe": {
+      "delete": {
+        "tags": ["LoogedUser"],
+        "summary": "Delete me",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "User deleted successfully"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+
+    "/api/v1/addresses": {
+      "post": {
+        "tags": ["Address"],
+        "summary": "add  Address",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "address",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Address"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User Add successfully"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/api/v1/addresses/{addressId}": {
+      "delete": {
+        "tags": ["Address"],
+        "summary": "add  Address",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "addressId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Address deleted successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/addresses/": {
+      "get": {
+        "tags": ["Address"],
+        "summary": "add  Address",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+
+        "responses": {
+          "204": {
+            "description": "Addresses successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+
+    "/api/v1/wishlist": {
+      "post": {
+        "tags": ["Wishlist"],
+        "summary": "add product to your wishlist ",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "wishlist",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/wishlist"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "add Products successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/wishlist/{productId}": {
+      "delete": {
+        "tags": ["Wishlist"],
+        "summary": "remove product from your wishlist ",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "remove successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/wishlist/": {
+      "get": {
+        "tags": ["Wishlist"],
+        "summary": "add product to your wishlist ",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "add Products successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+
+    "/api/v1/categories": {
+      "get": {
+        "tags": ["Category"],
+        "summary": "get  categories",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+
+        "responses": {
+          "204": {
+            "description": "Products successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/categories/{id}": {
+      "get": {
+        "tags": ["Category"],
+        "summary": "get  category",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Category get successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/categories/": {
+      "post": {
+        "tags": ["Category"],
+        "summary": "create  Category",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product create successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/categories/update/{id}": {
+      "put": {
+        "tags": ["Category"],
+        "summary": "Update  Category",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "formData",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "required": false,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product updates successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/categories/{id}/": {
+      "delete": {
+        "tags": ["Category"],
+        "summary": "delete  Category",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Category delete successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+
+    "/api/v1/subcategories": {
+      "get": {
+        "tags": ["SubCategories"],
+        "summary": "get  subCategories",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+
+        "responses": {
+          "204": {
+            "description": "Products successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/subcategories/{id}": {
+      "get": {
+        "tags": ["SubCategories"],
+        "summary": "get subCategories",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Category get successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/subcategories/": {
+      "post": {
+        "tags": ["SubCategories"],
+        "summary": "create  subCategories",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "subCategories",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/subCategories"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product create successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/subcategories/update/{id}": {
+      "put": {
+        "tags": ["SubCategories"],
+        "summary": "Update  subCategories",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "subCategories",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/subCategories"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product updates successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/SubCategories/{id}/": {
+      "delete": {
+        "tags": ["SubCategories"],
+        "summary": "delete  subCategories",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Category delete successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+
+    "/api/v1/products": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "get  Products",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+
+        "responses": {
+          "204": {
+            "description": "Products successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/products/{id}": {
+      "get": {
+        "tags": ["Products"],
+        "summary": "get  Product",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product get successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/products/": {
+      "post": {
+        "tags": ["Products"],
+        "summary": "create  Products",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "quantity",
+            "in": "formData",
+            "required": true,
+            "type": "number"
+          },
+          {
+            "name": "sold",
+            "in": "formData",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "price",
+            "in": "formData",
+            "required": true,
+            "type": "number"
+          },
+          {
+            "name": "priceAfterDiscount",
+            "in": "formData",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "description",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "subcategories",
+            "in": "formData",
+            "required": false,
+            "type": "array"
+          },
+
+          {
+            "name": "images",
+            "in": "formData",
+            "required": false,
+            "type": "file"
+          },
+          {
+            "name": "imageCover",
+            "in": "formData",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product create successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/products/update/{id}": {
+      "put": {
+        "tags": ["Products"],
+        "summary": "Update  Product",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "title",
+            "in": "formData",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "quantity",
+            "in": "formData",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "sold",
+            "in": "formData",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "price",
+            "in": "formData",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "priceAfterDiscount",
+            "in": "formData",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "description",
+            "in": "formData",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "in": "formData",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "subcategories",
+            "in": "formData",
+            "required": false,
+            "type": "array"
+          },
+
+          {
+            "name": "images",
+            "in": "formData",
+            "required": false,
+            "type": "file"
+          },
+          {
+            "name": "imageCover",
+            "in": "formData",
+            "required": false,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product updates successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/products/{id}/": {
+      "delete": {
+        "tags": ["Products"],
+        "summary": "delete  Product",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product delete successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+
+    "/api/v1/coupons": {
+      "get": {
+        "tags": ["Coupon"],
+        "summary": "get coupons",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+
+        "responses": {
+          "204": {
+            "description": "coupons get successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/coupons/{id}": {
+      "get": {
+        "tags": ["Coupon"],
+        "summary": "get coupon",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "coupon get successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/coupons/": {
+      "post": {
+        "tags": ["Coupon"],
+        "summary": "create coupon",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "coupon",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Coupon"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "coupons create successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/coupons/update/{id}": {
+      "put": {
+        "tags": ["Coupon"],
+        "summary": "Update  Coupon",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "updateCoupon",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/updateCoupon"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product updates successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/coupons/{id}/": {
+      "delete": {
+        "tags": ["Coupon"],
+        "summary": "delete  coupon",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "coupon delete successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+
+    "/api/v1/reviews": {
+      "get": {
+        "tags": ["Review"],
+        "summary": "get reviews",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+
+        "responses": {
+          "204": {
+            "description": "reviews successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/reviews/{id}": {
+      "get": {
+        "tags": ["Review"],
+        "summary": "get review",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "reviews successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/reviews/": {
+      "post": {
+        "tags": ["Review"],
+        "summary": "create review",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "review",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Review"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "brands create successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/reviews/update/{id}": {
+      "put": {
+        "tags": ["Review"],
+        "summary": "Update  Review",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "updateReview",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/updateReview"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Review updates successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/reviews/{id}/": {
+      "delete": {
+        "tags": ["Review"],
+        "summary": "delete  Review",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Review delete successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+
+    "/api/v1/brands": {
+      "get": {
+        "tags": ["Brands"],
+        "summary": "get Brands",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+
+        "responses": {
+          "204": {
+            "description": "brands successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/brands/{id}": {
+      "get": {
+        "tags": ["Brands"],
+        "summary": "get brand",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "brands get successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/brands/": {
+      "post": {
+        "tags": ["Brands"],
+        "summary": "create brand",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "required": false,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "brands create successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/brands/update/{id}": {
+      "put": {
+        "tags": ["Brands"],
+        "summary": "Update  Brand",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "formData",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "image",
+            "in": "formData",
+            "required": false,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product updates successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/brands/{id}/": {
+      "delete": {
+        "tags": ["Brands"],
+        "summary": "delete  Brand",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Brand delete successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+
+    "/api/v1/carts": {
+      "get": {
+        "tags": ["Cart"],
+        "summary": "get my cart",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+
+        "responses": {
+          "204": {
+            "description": "get my cart successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/carts/": {
+      "post": {
+        "tags": ["Cart"],
+        "summary": "add product to a cart",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "cart",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cart"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "cart create successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/carts/{itemId}": {
+      "delete": {
+        "tags": ["Cart"],
+        "summary": "delete  cart item",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "item delete successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/carts/clear": {
+      "delete": {
+        "tags": ["Cart"],
+        "summary": "delete all cart item",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+
+        "responses": {
+          "204": {
+            "description": "items delete successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/carts/update/{itemId}": {
+      "put": {
+        "tags": ["Cart"],
+        "summary": "Update  quentity",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "updateCartItemQuantity",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/updateCartItemQuantity"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product updates successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/carts/applyCoupon": {
+      "put": {
+        "tags": ["Cart"],
+        "summary": "add Coupon to cart",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "applyCoupon",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/applyCoupon"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "coupon added successfully"
+          },
+          "404": {}
+        }
+      }
+    }
+  },
+
+  "definitions": {
+    "UserInput": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+
+        "password": {
+          "type": "string"
+        },
+        "passwordConfirm": {
+          "type": "string"
+        }
+      }
+    },
+    "Login": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "forgetPassword": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "verifyPassResetCode": {
+      "type": "object",
+      "properties": {
+        "resetCode": {
+          "type": "string"
+        }
+      }
+    },
+    "resetPassword": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "changePassword": {
+      "type": "object",
+      "properties": {
+        "passwordConfirm": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "currentPassword": {
+          "type": "string"
+        }
+      }
+    },
+    "changeMyPassword": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "updateLoggedUser": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        }
+      }
+    },
+    "Address": {
+      "type": "object",
+      "properties": {
+        "alise": {
+          "type": "string"
+        },
+        "details": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "postCode": {
+          "type": "string"
+        }
+      }
+    },
+    "ProductInput": {
+      "type": "object",
+      "properties": {
+        "subcategories": {
+          "type": "string"
+        }
+      }
+    },
+    "subCategories": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "wishlist": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string"
+        }
+      }
+    },
+    "Review": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "product": {
+          "type": "string"
+        },
+        "ratings": {
+          "type": "number"
+        }
+      }
+    },
+    "updateReview": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "ratings": {
+          "type": "number"
+        }
+      }
+    },
+    "Coupon": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "expire": {
+          "type": "Date"
+        },
+        "discount": {
+          "type": "number"
+        }
+      }
+    },
+    "updateCoupon": {
+      "type": "object",
+      "properties": {
+        "expire": {
+          "type": "Date"
+        },
+        "discount": {
+          "type": "number"
+        }
+      }
+    },
+    "cart": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        }
+      }
+    },
+    "updateCartItemQuantity": {
+      "type": "object",
+      "properties": {
+        "quantity": {
+          "type": "number"
+        }
+      }
+    },
+    "applyCoupon": {
+      "type": "object",
+      "properties": {
+        "coupon": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -31,18 +31,19 @@ router
 router
   .route("/:id")
   .get(getBrandValidator, getBrand)
-  .put(
-    authServices.protect,
-    authServices.allowedTo("admin", "manager"),
-    uploadCategoryImage,
-    updateBrandValidator,
-    updateBrand
-  )
+
   .delete(
     authServices.protect,
     authServices.allowedTo("admin"),
     deleteBrandValidator,
     deleteBrand
   );
-
+router.put(
+  "/update/:id",
+  authServices.protect,
+  authServices.allowedTo("admin", "manager"),
+  uploadCategoryImage,
+  updateBrandValidator,
+  updateBrand
+);
 module.exports = router;

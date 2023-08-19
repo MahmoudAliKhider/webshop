@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 
 const {
   getCoupon,
@@ -6,15 +6,15 @@ const {
   createCoupon,
   updateCoupon,
   deleteCoupon,
-} = require('../services/coupon');
+} = require("../services/coupon");
 
-const authService = require('../services/auth');
+const authService = require("../services/auth");
 
 const router = express.Router();
 
-router.use(authService.protect, authService.allowedTo('admin', 'manager'));
+router.use(authService.protect, authService.allowedTo("admin", "manager"));
 
-router.route('/').get(getCoupons).post(createCoupon);
-router.route('/:id').get(getCoupon).put(updateCoupon).delete(deleteCoupon);
-
+router.route("/").get(getCoupons).post(createCoupon);
+router.route("/:id").get(getCoupon).delete(deleteCoupon);
+router.put("/update/:id", updateCoupon);
 module.exports = router;
