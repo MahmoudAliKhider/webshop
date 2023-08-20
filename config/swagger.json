@@ -1758,6 +1758,158 @@
           "404": {}
         }
       }
+    },
+
+    "/api/v1/orders/{cartId}": {
+      "post": {
+        "tags": ["Order"],
+        "summary": "create order",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "applyCoupon",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ShippingAddress"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "order make successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/orders": {
+      "get": {
+        "tags": ["Order"],
+        "summary": "get all orders",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+
+        "responses": {
+          "204": {
+            "description": "get orders successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/orders/{id}": {
+      "get": {
+        "tags": ["Order"],
+        "summary": "get order",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": " get order successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/orders/checkout-session/{cartId}": {
+      "get": {
+        "tags": ["Order"],
+        "summary": "checkout orders",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "checkout orders successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/orders/{id}/pay": {
+      "put": {
+        "tags": ["Order"],
+        "summary": "Update order pay",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "order payed updates successfully"
+          },
+          "404": {}
+        }
+      }
+    },
+    "/api/v1/orders/{id}/deliver": {
+      "put": {
+        "tags": ["Order"],
+        "summary": "Update order deliver",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "order deliver updates successfully"
+          },
+          "404": {}
+        }
+      }
     }
   },
 
@@ -1977,6 +2129,33 @@
           "type": "string"
         }
       }
+    },
+    "ShippingAddress": {
+      "type": "object",
+      "properties": {
+        "ShippingAddress": {
+          "type": "object",
+          "properties": {
+            "details": {
+              "type": "string",
+              "example": "123 Main St"
+            },
+            "phone": {
+              "type": "integer",
+              "example": 12345678
+            },
+            "city": {
+              "type": "string",
+              "example": "Cairo"
+            },
+            "postalCode": {
+              "type": "string",
+              "example": "1234"
+            }
+          }
+        }
+      },
+      "required": ["details", "phone", "city", "postalCode"]
     }
   }
 }
