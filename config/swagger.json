@@ -2,15 +2,18 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "API"
+    "title": "API",
+    "description": "This API provides various endpoints that allow both users and administrators to interact with the system.\n\nUsers can manage their accounts, addresses, wishlists, view categories,view subcategories,view products, and write reviews.\n\nAdministrators have additional privileges to manage brands, carts, orders, and more."
   },
+  
   "schemes": ["https", "http"],
   "consumes": ["application/json"],
   "securityDefinitions": {
     "BearerAuth": {
       "type": "apiKey",
       "name": "Authorization",
-      "in": "header"
+      "in": "header",
+      "description": "Bearer + Token"
     }
   },
 
@@ -1763,7 +1766,7 @@
     "/api/v1/orders/{cartId}": {
       "post": {
         "tags": ["Order"],
-        "summary": "create order",
+        "summary": "create Cash order",
         "security": [
           {
             "BearerAuth": []
