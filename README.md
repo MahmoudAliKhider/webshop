@@ -1,5 +1,5 @@
 # Webshop API
-## https://webshop-5vex.onrender.com/
+## https://webshop-5vex.onrender.com/swagger
 This project implements an API for a webshop application using Express Server and MongoDB. The API covers various aspects of an online store, including categories and subcategories management, advanced error handling, product management, image handling, authentication and authorization, user interaction, coupons and shopping cart, order management, and deployment.
 
 ## Table of Contents
