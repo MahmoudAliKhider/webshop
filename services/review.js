@@ -6,6 +6,7 @@ const ApiFeatures = require("../utils/apiFeatures");
 
 const Review = require("../models/review");
 
+// Middleware to create the filter object
 exports.createFilterObj = (req, res, next) => {
   let filterObject = {};
   if (req.params.productId) filterObject = { product: req.params.productId };
@@ -14,20 +15,24 @@ exports.createFilterObj = (req, res, next) => {
 };
 
 exports.getReviews = asyncHandler(async (req, res) => {
-  const documentCount = await Review.countDocuments();
-  const apiFeature = new ApiFeatures(Review.find(), req.query)
-    .paginate(documentCount)
-    .filter()
-    .sort()
-    .search()
-    .limitFields();
-  const { mongooseQuery, paginationResult } = apiFeature;
-  const reviews = await mongooseQuery;
+  try {
+    const documentCount = await Review.countDocuments(req.filterObj); 
 
-  res
-    .status(200)
-    .json({ paginationResult, results: reviews.length, data: reviews });
+    const apiFeature = new ApiFeatures(Review.find(req.filterObj), req.query)
+      .paginate(documentCount)
+      .sort()
+      .search()
+      .limitFields();
+
+    const { mongooseQuery, paginationResult } = apiFeature;
+    const reviews = await mongooseQuery;
+
+    res.status(200).json({ paginationResult, results: reviews.length, data: reviews });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
 });
+
 
 exports.getReview = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
